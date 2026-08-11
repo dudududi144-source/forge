@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+build/
+.env
+.env.local
+.env.*.local
+.vscode/
+.idea/
+*.swp
+.DS_Store
+*.log
+coverage/
+*.db
+*.db-journal
+dist/
+.vercel
