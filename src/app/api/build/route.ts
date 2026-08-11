@@ -1,15 +1,5 @@
 import { NextResponse } from 'next/server'
 
-/**
- * Build API endpoint for Forge.
- * 
- * Triggers a build on a target repository.
- * 
- * POST /api/build
- * Body: { repo: string, branch?: string }
- * 
- * Response: { success: boolean, buildId: string, status: string }
- */
 export async function POST(request: Request) {
   try {
     const body = await request.json()
@@ -22,11 +12,8 @@ export async function POST(request: Request) {
       )
     }
     
-    // Generate a build ID
     const buildId = `build_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
-    
-    // Trigger GitHub Actions workflow on the target repo
-    const githubToken = process.env.GITHUB_TOKEN
+    const githubToken = process.env.GH_TOKEN || process.env.GITHUB_TOKEN
     
     if (githubToken) {
       try {
@@ -69,7 +56,6 @@ export async function POST(request: Request) {
       }
     }
     
-    // If no GitHub token, return a mock response
     return NextResponse.json({
       success: true,
       buildId,
@@ -78,7 +64,6 @@ export async function POST(request: Request) {
       branch,
       message: 'Build queued (no GitHub token configured)',
     })
-    
   } catch (error) {
     return NextResponse.json({
       success: false,
