@@ -9,9 +9,9 @@ import { NextResponse } from 'next/server'
  */
 export async function GET(
   request: Request,
-  { params }: { params: { buildId: string } }
+  { params }: { params: Promise<{ buildId: string }> }
 ) {
-  const { buildId } = params
+  const { buildId } = await params
   
   // In a real implementation, this would query the database
   // For now, return a mock response
