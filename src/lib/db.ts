@@ -30,16 +30,25 @@ function createPrismaClient(): PrismaClient {
       url: process.env.TURSO_URL!,
       authToken: process.env.TURSO_AUTH_TOKEN,
     })
+    
     const adapter = new PrismaLibSQL(libsql)
-    return new PrismaClient({ adapter, log: ['error'] })
+    return new PrismaClient({ adapter } as any)
   }
   
-  // Local development - uses DATABASE_URL from .env
-  return new PrismaClient({ log: ['error'] })
+  // Local SQLite (development)
+  return new PrismaClient({
+    datasources: {
+      db: {
+        url: 'file:./dev.db',
+      },
+    },
+  })
 }
 
-// Singleton pattern to prevent connection exhaustion
-const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient }
+// Singleton pattern to prevent multiple connections
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined
+}
 
 export const db = globalForPrisma.prisma ?? createPrismaClient()
 
