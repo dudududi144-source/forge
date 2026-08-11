@@ -1,0 +1,16 @@
+name: Forge Ingest
+
+on:
+  repository_dispatch:
+    types: [ingest]
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download and upload
+        run: |
+          echo "Ingest triggered"
+          echo "Source URL: ${{ github.event.client_payload.sourceUrl }}"
+          curl -sL "${{ github.event.client_payload.sourceUrl }}" -o project.zip
+          echo "Downloaded $(wc -c < project.zip) bytes"
